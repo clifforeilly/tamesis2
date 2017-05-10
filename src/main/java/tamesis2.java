@@ -26,6 +26,7 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+
 /**
  * Created by cliff on 12/04/2017.
  *
@@ -242,7 +243,9 @@ public class tamesis2 {
                     log("Starting Jena ontoloy population");
 
                     setupParseLookups();
-                    JontoParse("1", "1");
+
+                    //"RDF/XML-ABBREV"
+                    JontoParse("1", "RDF/XML");
 
                     WorkFolder = WorkFolder.replace(inFolder, "6_JOntoParsed");
                     //set up model here?
@@ -1008,7 +1011,7 @@ public class tamesis2 {
 
                 log("Created ontology model for " + tf.getName());
 
-                jmodel= new jmodel();
+                jmodel= new jmodel(OutputType);
                 jmodel.addIndividual("DocStruct", "doc", "doc");
 
                 String everything;
@@ -1563,7 +1566,7 @@ class jmodel{
     ObjectProperty op_hasRhetoricalDevice;
     String outputformat;
 
-    public jmodel(){
+    public jmodel(String pOutputFormat){
 
         try
         {
@@ -1586,7 +1589,7 @@ class jmodel{
             ns_new = "http://repositori.com/sw/onto/jj_" + tamesis2.now + ".owl";
             mod_new = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RULE_INF);
 
-            outputformat = "RDF/XML-ABBREV";
+            outputformat = pOutputFormat;
             setupClasses();
             tamesis2.inFolder = "6_JOntoParsed";
 
@@ -1619,11 +1622,21 @@ class jmodel{
             rules = rules + "(?y " + ns_gate + "#hasString ?e) ";
             rules = rules + "(?a " + ns_gate + "#hasString ?f) ";
             rules = rules + "(?b " + ns_gate + "#hasString ?g) ";
+            //rules = rules + "(?j rdf:type http://www.w3.org/2001/XMLSchema#int) ";
+            //rules = rules + "(?k rdf:type http://www.w3.org/2001/XMLSchema#int) ";
+            rules = rules + "(?x " + ns_gate + "#hasStartNode ?j) ";
+            rules = rules + "(?b " + ns_gate + "#hasEndNode ?k) ";
 
-            rules = rules + " Equal(?d, ?f) ";
-            //rules = rules + " Equal(?e, ?g) ";
+            rules = rules + "equal(?d, ?f) ";
+            rules = rules + "equal(?e, ?g) ";
+            rules = rules + "makeTemp(?w) ";
 
-            rules = rules + "-> (?h " + ns_gate + "#hasRhetoricalDevice " + ns_RhetDev + "#Anaphora)]";
+            rules = rules + "-> (?w rdf:type " + ns_RhetDev + "#Anaphora) ";
+            rules = rules + "(?h " + ns_gate + "#hasRhetoricalDevice " + ns_RhetDev + "#Anaphora) ";
+            rules = rules + "(?w " + ns_gate + "#hasID " + ns_new + "#rd1) ";
+            //rules = rules + "(" + ns_new + "#rd1 " + ns_gate + "#hasStartNode ?j^^http://www.w3.org/2001/XMLSchema#int) ";
+            //rules = rules + "(" + ns_new + "#rd1 " + ns_gate + "#hasEndNode ?k^^http://www.w3.org/2001/XMLSchema#int) ";
+            rules = rules + "]";
             tamesis2.log("Rules: " + rules);
 
             Reasoner reasoner = new GenericRuleReasoner(Rule.parseRules(rules));
