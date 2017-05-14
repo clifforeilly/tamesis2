@@ -1624,6 +1624,7 @@ class jmodel{
             rules = rules + "(?b " + ns_gate + "#hasString ?g) ";
             //rules = rules + "(?j rdf:type http://www.w3.org/2001/XMLSchema#int) ";
             //rules = rules + "(?k rdf:type http://www.w3.org/2001/XMLSchema#int) ";
+            //rules = rules + "isLiteral(?j) ";
             rules = rules + "(?x " + ns_gate + "#hasStartNode ?j) ";
             rules = rules + "(?b " + ns_gate + "#hasEndNode ?k) ";
 
@@ -1632,9 +1633,9 @@ class jmodel{
             rules = rules + "makeTemp(?w) ";
 
             rules = rules + "-> (?w rdf:type " + ns_RhetDev + "#Anaphora) ";
-            rules = rules + "(?h " + ns_gate + "#hasRhetoricalDevice " + ns_RhetDev + "#Anaphora) ";
+            rules = rules + "(?h " + ns_RhetDev + "#hasRhetoricalDevice " + ns_RhetDev + "#Anaphora) ";
             rules = rules + "(?w " + ns_gate + "#hasID " + ns_new + "#rd1) ";
-            //rules = rules + "(" + ns_new + "#rd1 " + ns_gate + "#hasStartNode ?j^^http://www.w3.org/2001/XMLSchema#int) ";
+            rules = rules + "(" + ns_new + "#rd1 " + ns_gate + "#hasStartNode ?j^^<http://www.w3.org/2001/XMLSchema#int>) ";
             //rules = rules + "(" + ns_new + "#rd1 " + ns_gate + "#hasEndNode ?k^^http://www.w3.org/2001/XMLSchema#int) ";
             rules = rules + "]";
             tamesis2.log("Rules: " + rules);
